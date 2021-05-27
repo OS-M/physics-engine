@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(MMMX-Client)
-project(MMMX-Server)
+project(Physics)
 
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(
@@ -70,8 +69,8 @@ set(SOURCES main.cpp main.cpp)
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)
 
-add_executable(MMMX-Server ${SOURCES} ${RESOURCES_COMMON}
+add_executable(Physics ${SOURCES} ${RESOURCES_COMMON}
         ${SYSTEM_DEPENDENT_SOURCES})
 
-target_link_libraries(MMMX-Server ${REQUIRED_LIBS_QUALIFIED})
+target_link_libraries(Physics ${REQUIRED_LIBS_QUALIFIED})
 
