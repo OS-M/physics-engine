@@ -64,7 +64,11 @@ set(UBSAN_FLAGS
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ${UBSAN_FLAGS}")
 
 # Add code files
-set(SOURCES main.cpp main.cpp)
+set(SOURCES
+        main.cpp
+        PhysicsObject/physics_object.cpp
+        PhysicsObject/physics_object.h
+        PhysicsObject/StaticObject/StaticObject.cpp PhysicsObject/StaticObject/StaticObject.h PhysicsObject/RectangleObject/rectangle_object.cpp PhysicsObject/RectangleObject/rectangle_object.h GUI/MainWindow/main_window.cpp GUI/MainWindow/main_window.h Constants/constants.cpp Constants/constants.h Painter/painter.cpp Painter/painter.h)
 
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)
