@@ -81,3 +81,7 @@ bool Point::operator<(const Point& other) const {
   }
   return Math::IsLess(x_, other.x_);
 }
+
+bool Point::IsRightTurn(const Point& point) const {
+  return Math::IsNegative(x_ * point.Y() - y_ * point.X());
+}

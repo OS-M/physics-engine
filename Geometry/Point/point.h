@@ -22,6 +22,7 @@ class Point {
   double AngleTo(const Point& point) const;
   double Angle() const;
   Point Normalized() const;
+  bool IsRightTurn(const Point& point) const;
 
   double X() const;
   void SetX(double x);

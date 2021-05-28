@@ -52,10 +52,5 @@ double Line::DistanceTo(const Point& point) const {
 }
 
 bool Line::IsOnRightSize(const Point& point) const {
-  double x1 = point1_.X();
-  double y1 = point1_.Y();
-  double x2 = point2_.X();
-  double y2 = point2_.Y();
-  return Math::IsNegative(
-      (x2 - x1) * (point.Y() - y1) - (y2 - y1) * (point.X() - x1));
+  return (point2_ - point1_).IsRightTurn(point - point2_);
 }
