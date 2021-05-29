@@ -71,7 +71,7 @@ set(SOURCES
 #        PhysicsObject/StaticObject/StaticObject.h
 #        PhysicsObject/RectangleObject/rectangle_object.cpp
 #        PhysicsObject/RectangleObject/rectangle_object.h
-#        GUI/MainWindow/main_window.cpp GUI/MainWindow/main_window.h
+        GUI/MainWindow/main_window.cpp GUI/MainWindow/main_window.h
         Constants/constants.cpp Constants/constants.h
         Painter/painter.cpp Painter/painter.h
         Geometry/Line/line.h Geometry/Line/line.cpp
@@ -81,7 +81,7 @@ set(SOURCES
         Geometry/Segment/segment.h
         Geometry/Polygon/polygon.cpp
         Geometry/Polygon/polygon.h
-        )
+        Geometry/Circle/circle.cpp Geometry/Circle/circle.h)
 
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)

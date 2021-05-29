@@ -31,7 +31,7 @@ std::vector<Point> Segment::Intersects(const Line& line) const {
 
 std::vector<Point> Segment::Intersects(const Segment& segment) const {
   std::vector<Point> points;
-  for (const auto& point : this->Intersects(segment.GetLine())) {
+  for (const auto& point : this->Intersects(segment.Line())) {
     if (segment.Contains(point)) {
       points.push_back(point);
     }
@@ -39,7 +39,7 @@ std::vector<Point> Segment::Intersects(const Segment& segment) const {
   return points;
 }
 
-Line Segment::GetLine() const {
+Line Segment::Line() const {
   return line_;
 }
 

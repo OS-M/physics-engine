@@ -58,3 +58,21 @@ bool Line::IsOnRightSize(const Point& point) const {
 QLineF Line::ToQLineF() const {
   return QLineF(point1_.ToQPointF(), point2_.ToQPointF());
 }
+
+Line::Line(double a, double b, double c) : a_(a), b_(b), c_(c) {
+  if (Math::IsZero(a) && Math::IsZero(b)) {
+    qWarning() << "A and B are zero";
+  }
+}
+
+double Line::A() const {
+  return a_;
+}
+
+double Line::B() const {
+  return b_;
+}
+
+double Line::C() const {
+  return c_;
+}

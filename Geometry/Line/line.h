@@ -10,6 +10,7 @@
 class Line {
  public:
   Line(const Point& point1, const Point& point2);
+  Line(double a, double b, double c);
 
   bool Contains(const Point& point) const;
   std::vector<Point> Intersects(const Line& other) const;
@@ -18,6 +19,9 @@ class Line {
   double DistanceTo(const Point& point) const;
   bool IsOnRightSize(const Point& point) const;
   QLineF ToQLineF() const;
+  double A() const;
+  double B() const;
+  double C() const;
 
  private:
   double a_;

@@ -8,6 +8,7 @@ class Point {
  public:
   Point() = default;
   Point(double x, double y);
+  Point(QPointF point_f);
   Point(const Point& point1, const Point& point2);
 
   Point operator+(const Point& other) const;
@@ -30,6 +31,8 @@ class Point {
   void SetX(double x);
   double Y() const;
   void SetY(double y);
+  double& MutableX();
+  double& MutableY();
 
   QPointF ToQPointF() const;
 

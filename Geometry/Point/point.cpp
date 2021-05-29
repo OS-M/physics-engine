@@ -83,7 +83,7 @@ bool Point::operator<(const Point& other) const {
 }
 
 bool Point::IsRightTurn(const Point& point) const {
-  return Math::IsNegative(x_ * point.Y() - y_ * point.X());
+  return Math::IsPositive(x_ * point.Y() - y_ * point.X());
 }
 
 Point::Point(const Point& point1, const Point& point2) {
@@ -92,4 +92,14 @@ Point::Point(const Point& point1, const Point& point2) {
 
 QPointF Point::ToQPointF() const {
   return QPointF(x_, y_);
+}
+
+Point::Point(QPointF point_f) : Point(point_f.x(), point_f.y()) {}
+
+double& Point::MutableX() {
+  return x_;
+}
+
+double& Point::MutableY() {
+  return y_;
 }
