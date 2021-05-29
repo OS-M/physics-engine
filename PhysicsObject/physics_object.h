@@ -2,6 +2,8 @@
 #define PHYSICS_OBJECT_H_
 
 #include <QPainter>
+#include <QMetaEnum>
+#include "Geometry/Point/point.h"
 
 namespace PhysicsObjectTypeWrapper {
 
@@ -37,12 +39,17 @@ class PhysicsObject {
   void SetResiliency(double resiliency);
   double GetResiliency() const;
 
-  virtual Rectangle GetBoundingRect() const = 0;
-  virtual Circle GetBoundingCircle() const = 0;
+  void SetForce(const Point& force);
+  Point GetForce() const;
+
+  void SetVelocity(const Point& velocity);
+  Point GetVelocity() const;
 
  private:
   Point position_;
   double resiliency_{0.};
+  Point force_;
+  Point velocity_;
 };
 
 #endif  // PHYSICS_OBJECT_H_

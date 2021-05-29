@@ -14,7 +14,7 @@ class Segment {
   std::vector<Point> Intersects(const Line& line) const;
   std::vector<Point> Intersects(const Segment& segment) const;
   Point Middle() const;
-  Line Line() const;
+  Line GetLine() const;
   Point Vector() const;
   QLineF ToQLineF() const;
 

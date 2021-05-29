@@ -75,7 +75,7 @@ double Circle::Diameter() const {
 }
 
 std::vector<Point> Circle::Intersected(const Segment& segment) const {
-  auto points = this->Intersected(segment.Line());
+  auto points = this->Intersected(segment.GetLine());
   std::vector<Point> answer;
   for (auto point : points) {
     if (segment.Contains(point)) {

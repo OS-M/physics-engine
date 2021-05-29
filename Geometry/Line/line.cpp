@@ -7,6 +7,12 @@ Line::Line(const Point& point1, const Point& point2) :
   c_ = point2.X() * point1.Y() - point1.X() * point2.Y();
 }
 
+Line::Line(double a, double b, double c) : a_(a), b_(b), c_(c) {
+  if (Math::IsZero(a) && Math::IsZero(b)) {
+    qWarning() << "A and B are zero";
+  }
+}
+
 bool Line::Contains(const Point& point) const {
   return Math::IsZero(this->DistanceTo(point));
 }
@@ -57,12 +63,6 @@ bool Line::IsOnRightSize(const Point& point) const {
 
 QLineF Line::ToQLineF() const {
   return QLineF(point1_.ToQPointF(), point2_.ToQPointF());
-}
-
-Line::Line(double a, double b, double c) : a_(a), b_(b), c_(c) {
-  if (Math::IsZero(a) && Math::IsZero(b)) {
-    qWarning() << "A and B are zero";
-  }
 }
 
 double Line::A() const {

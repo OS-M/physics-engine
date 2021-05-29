@@ -22,3 +22,19 @@ Point PhysicsObject::GetPosition() const {
 void PhysicsObject::SetPosition(const Point& position) {
   position_ = position;
 }
+
+Point PhysicsObject::GetForce() const {
+  return force_;
+}
+
+Point PhysicsObject::GetVelocity() const {
+  return velocity_;
+}
+
+void PhysicsObject::SetForce(const Point& force) {
+  force_ = force;
+}
+
+void PhysicsObject::SetVelocity(const Point& velocity) {
+  velocity_ = velocity;
+}
