@@ -84,3 +84,7 @@ std::vector<Point> Circle::Intersected(const Segment& segment) const {
   }
   return answer;
 }
+
+void Circle::Shift(const Point& shift) {
+  center_ += shift;
+}

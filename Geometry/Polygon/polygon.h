@@ -29,6 +29,8 @@ class Polygon {
 
   std::vector<Point> Points() const;
 
+  void Shift(const Point& shift);
+
   QPolygonF ToQPolygonF() const;
 
  private:

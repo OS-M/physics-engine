@@ -103,3 +103,11 @@ double& Point::MutableX() {
 double& Point::MutableY() {
   return y_;
 }
+
+void Point::operator+=(const Point& other) {
+  *this = *this + other;
+}
+
+void Point::operator-=(const Point& other) {
+  *this = *this - other;
+}

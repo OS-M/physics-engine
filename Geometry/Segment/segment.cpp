@@ -54,3 +54,7 @@ Point Segment::Vector() const {
 QLineF Segment::ToQLineF() const {
   return QLineF(point1_.ToQPointF(), point2_.ToQPointF());
 }
+
+void Segment::Shift(const Point& shift) {
+  *this = Segment(point1_ + shift, point2_ + shift);
+}

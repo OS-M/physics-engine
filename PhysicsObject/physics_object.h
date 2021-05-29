@@ -27,29 +27,37 @@ Q_DECLARE_METATYPE(PhysicsObjectType)
 class PhysicsObject {
  public:
   PhysicsObject() = default;
-  explicit PhysicsObject(const Point& position);
+  explicit PhysicsObject(double mass);
 
   virtual PhysicsObjectType GetType() const;
 
   virtual void Draw(QPainter* painter) const = 0;
 
-  void SetPosition(const Point& position);
-  Point GetPosition() const;
+  virtual void Shift(const Point& shift) = 0;
 
   void SetResiliency(double resiliency);
   double GetResiliency() const;
 
   void SetForce(const Point& force);
+  Point& GetMutableForce();
   Point GetForce() const;
 
   void SetVelocity(const Point& velocity);
+  Point& GetMutableVelocity();
   Point GetVelocity() const;
 
+  void SetMass(double mass);
+  double GetMass() const;
+
+  void SetStatic(bool is_static);
+  bool IsStatic() const;
+
  private:
-  Point position_;
+  bool static_{false};
   double resiliency_{0.};
   Point force_;
   Point velocity_;
+  double mass_{1.};
 };
 
 #endif  // PHYSICS_OBJECT_H_

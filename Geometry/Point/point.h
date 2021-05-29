@@ -8,11 +8,13 @@ class Point {
  public:
   Point() = default;
   Point(double x, double y);
-  Point(QPointF point_f);
+  explicit Point(QPointF point_f);
   Point(const Point& point1, const Point& point2);
 
   Point operator+(const Point& other) const;
+  void operator+=(const Point& other);
   Point operator-(const Point& other) const;
+  void operator-=(const Point& other);
   Point operator*(double scalar) const;
   Point operator/(double scalar) const;
   bool operator==(const Point& other) const;

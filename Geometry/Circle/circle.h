@@ -14,6 +14,8 @@ class Circle {
   std::vector<Point> Intersected(const Line& line) const;
   std::vector<Point> Intersected(const Segment& segment) const;
 
+  void Shift(const Point& shift);
+
   Point Center() const;
   double Radius() const;
   double Diameter() const;

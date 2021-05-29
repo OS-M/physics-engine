@@ -76,3 +76,7 @@ double Line::B() const {
 double Line::C() const {
   return c_;
 }
+
+void Line::Shift(const Point& shift) {
+  *this = Line(point1_ + shift, point2_ + shift);
+}

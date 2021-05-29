@@ -21,6 +21,8 @@ class Line {
   bool IsOnRightSide(const Point& point) const;
   QLineF ToQLineF() const;
 
+  void Shift(const Point& shift);
+
   double A() const;
   double B() const;
   double C() const;

@@ -102,3 +102,9 @@ std::vector<Point> Polygon::Intersected(const Circle& circle) const {
   }
   return answer;
 }
+
+void Polygon::Shift(const Point& shift) {
+  for (int i = 0; i < this->Size(); i++) {
+    points_[i] += shift;
+  }
+}

@@ -10,6 +10,9 @@ class PolygonObject : public PhysicsObject {
   PolygonObject(const Point& position,
                 double width, double height);
   explicit PolygonObject(std::vector<Point> points);
+  virtual ~PolygonObject() = default;
+
+  void Shift(const Point& shift) override;
 
   void Draw(QPainter* painter) const override;
 

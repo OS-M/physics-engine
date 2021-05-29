@@ -87,7 +87,7 @@ set(SOURCES
         Geometry/Polygon/polygon.h
         Geometry/Circle/circle.cpp
         Geometry/Circle/circle.h
-        )
+        Engine/engine.cpp Engine/engine.h GUI/View/view.cpp GUI/View/view.h)
 
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)

@@ -18,3 +18,8 @@ QPolygonF PolygonObject::ToQPolygonF() const {
 void PolygonObject::Rotate(const Point& center, double angle) {
   polygon_ = polygon_.Rotated(center, angle);
 }
+
+void PolygonObject::Shift(const Point& shift) {
+  polygon_.Shift(shift);
+}
+
