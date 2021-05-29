@@ -9,10 +9,11 @@ class Segment {
  public:
   Segment(const Point& point1, const Point& point2);
 
-  double Length() const;
   bool Contains(const Point& point) const;
-  std::vector<Point> Intersects(const Line& line) const;
-  std::vector<Point> Intersects(const Segment& segment) const;
+  std::vector<Point> Intersected(const Line& line) const;
+  std::vector<Point> Intersected(const Segment& segment) const;
+  
+  double Length() const;
   Point Middle() const;
   Line GetLine() const;
   Point Vector() const;

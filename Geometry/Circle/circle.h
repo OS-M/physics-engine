@@ -13,6 +13,7 @@ class Circle {
   std::vector<Point> Intersected(const Circle& other) const;
   std::vector<Point> Intersected(const Line& line) const;
   std::vector<Point> Intersected(const Segment& segment) const;
+
   Point Center() const;
   double Radius() const;
   double Diameter() const;

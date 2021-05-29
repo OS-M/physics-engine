@@ -14,11 +14,15 @@
 class Polygon {
  public:
   Polygon() = default;
-  explicit Polygon(std::vector<Point> points);
   Polygon(const Point& point, double width, double height);
   Polygon(const Point& point1, const Point& point2);
+  explicit Polygon(std::vector<Point> points);
 
   bool Contains(const Point& point) const;
+  std::vector<Point> Intersected(const Line& line) const;
+  std::vector<Point> Intersected(const Polygon& polygon) const;
+  std::vector<Point> Intersected(const Circle& circle) const;
+
   Segment GetSide(int index) const;
   int Size() const;
   Polygon Rotated(const Point& center, double angle) const;
@@ -26,10 +30,6 @@ class Polygon {
   std::vector<Point> Points() const;
 
   QPolygonF ToQPolygonF() const;
-
-  std::vector<Point> Intersects(const Line& line) const;
-  std::vector<Point> Intersects(const Polygon& polygon) const;
-  std::vector<Point> Intersects(const Circle& circle) const;
 
  private:
   std::vector<Point> points_;

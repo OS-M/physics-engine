@@ -13,12 +13,14 @@ class Line {
   Line(double a, double b, double c);
 
   bool Contains(const Point& point) const;
-  std::vector<Point> Intersects(const Line& other) const;
+  std::vector<Point> Intersected(const Line& other) const;
+
   Line Rotated(const Point& point, double angle) const;
   Line Normal() const;
   double DistanceTo(const Point& point) const;
-  bool IsOnRightSize(const Point& point) const;
+  bool IsOnRightSide(const Point& point) const;
   QLineF ToQLineF() const;
+
   double A() const;
   double B() const;
   double C() const;

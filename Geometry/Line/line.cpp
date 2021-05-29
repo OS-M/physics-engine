@@ -17,7 +17,7 @@ bool Line::Contains(const Point& point) const {
   return Math::IsZero(this->DistanceTo(point));
 }
 
-std::vector<Point> Line::Intersects(const Line& other) const {
+std::vector<Point> Line::Intersected(const Line& other) const {
   double a1 = a_;
   double b1 = b_;
   double c1 = c_;
@@ -57,7 +57,7 @@ double Line::DistanceTo(const Point& point) const {
       / sqrt(a_ * a_ + b_ * b_);
 }
 
-bool Line::IsOnRightSize(const Point& point) const {
+bool Line::IsOnRightSide(const Point& point) const {
   return (point2_ - point1_).IsRightTurn(point - point2_);
 }
 

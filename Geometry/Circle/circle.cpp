@@ -40,7 +40,7 @@ std::vector<Point> Circle::Intersected(const Line& line) const {
     perp_c -= perp_b * (center_y - temp_y);
   }
 
-  auto tangent_point = line.Intersects(Line(perp_a, perp_b, perp_c));
+  auto tangent_point = line.Intersected(Line(perp_a, perp_b, perp_c));
   if (tangent_point.empty()) {
     return {};
   }

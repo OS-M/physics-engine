@@ -21,18 +21,19 @@ class Point {
   double DistanceTo(const Point& point) const;
   double DotProduct(const Point& other) const;
   double Length() const;
-  Point GetNormal() const;
+  Point Normal() const;
   double AngleTo(const Point& point) const;
   double Angle() const;
   Point Normalized() const;
   bool IsRightTurn(const Point& point) const;
 
-  double X() const;
   void SetX(double x);
-  double Y() const;
-  void SetY(double y);
   double& MutableX();
+  double X() const;
+
+  void SetY(double y);
   double& MutableY();
+  double Y() const;
 
   QPointF ToQPointF() const;
 

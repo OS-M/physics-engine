@@ -32,7 +32,7 @@ double Point::Length() const {
   return std::sqrt(x_ * x_ + y_ * y_);
 }
 
-Point Point::GetNormal() const {
+Point Point::Normal() const {
   return Point(y_, -x_);
 }
 

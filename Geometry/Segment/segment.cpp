@@ -19,9 +19,9 @@ bool Segment::Contains(const Point& point) const {
                        Math::Max(point1_.Y(), point2_.Y()));
 }
 
-std::vector<Point> Segment::Intersects(const Line& line) const {
+std::vector<Point> Segment::Intersected(const Line& line) const {
   std::vector<Point> points;
-  for (const auto& point : line_.Intersects(line)) {
+  for (const auto& point : line_.Intersected(line)) {
     if (this->Contains(point)) {
       points.push_back(point);
     }
@@ -29,9 +29,9 @@ std::vector<Point> Segment::Intersects(const Line& line) const {
   return points;
 }
 
-std::vector<Point> Segment::Intersects(const Segment& segment) const {
+std::vector<Point> Segment::Intersected(const Segment& segment) const {
   std::vector<Point> points;
-  for (const auto& point : this->Intersects(segment.GetLine())) {
+  for (const auto& point : this->Intersected(segment.GetLine())) {
     if (segment.Contains(point)) {
       points.push_back(point);
     }

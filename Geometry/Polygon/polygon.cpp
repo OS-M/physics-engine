@@ -75,16 +75,16 @@ std::vector<Point> Polygon::Points() const {
   return points_;
 }
 
-std::vector<Point> Polygon::Intersects(const Line& line) const {
+std::vector<Point> Polygon::Intersected(const Line& line) const {
   std::vector<Point> answer;
   for (int i = 0; i < this->Size(); i++) {
-    auto points = this->GetSide(i).Intersects(line);
+    auto points = this->GetSide(i).Intersected(line);
     answer.insert(answer.end(), points.begin(), points.end());
   }
   return answer;
 }
 
-std::vector<Point> Polygon::Intersects(const Polygon& polygon) const {
+std::vector<Point> Polygon::Intersected(const Polygon& polygon) const {
   std::vector<Point> answer;
   for (const auto& point : polygon.points_) {
     if (this->Contains(point)) {
@@ -94,7 +94,7 @@ std::vector<Point> Polygon::Intersects(const Polygon& polygon) const {
   return answer;
 }
 
-std::vector<Point> Polygon::Intersects(const Circle& circle) const {
+std::vector<Point> Polygon::Intersected(const Circle& circle) const {
   std::vector<Point> answer;
   for (int i = 0; i < this->Size(); i++) {
     auto points = circle.Intersected(this->GetSide(i));
