@@ -5,6 +5,7 @@
 #include "Geometry/Point/point.h"
 #include "Math/math.h"
 #include <QDebug>
+#include <QLineF>
 
 class Line {
  public:
@@ -16,6 +17,7 @@ class Line {
   Line Normal() const;
   double DistanceTo(const Point& point) const;
   bool IsOnRightSize(const Point& point) const;
+  QLineF ToQLineF() const;
 
  private:
   double a_;

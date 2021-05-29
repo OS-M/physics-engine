@@ -16,13 +16,12 @@ set(CMAKE_PREFIX_PATH ${Qt_DIR})
 # Set Qt version
 set(QT_VERSION 5)
 # Set necessary Qt modules
-set(REQUIRED_LIBS Core Multimedia Network Svg WebSockets Widgets)
+set(REQUIRED_LIBS Core Multimedia Network WebSockets Widgets)
 # Set corresponding Qt libraries
 set(REQUIRED_LIBS_QUALIFIED
         Qt5::Core
         Qt5::Multimedia
         Qt5::Network
-        Qt5::Svg
         Qt5::WebSockets
         Qt5::Widgets)
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
@@ -66,15 +65,28 @@ set(UBSAN_FLAGS
 # Add code files
 set(SOURCES
         main.cpp
-        PhysicsObject/physics_object.cpp
-        PhysicsObject/physics_object.h
-        PhysicsObject/StaticObject/StaticObject.cpp PhysicsObject/StaticObject/StaticObject.h PhysicsObject/RectangleObject/rectangle_object.cpp PhysicsObject/RectangleObject/rectangle_object.h GUI/MainWindow/main_window.cpp GUI/MainWindow/main_window.h Constants/constants.cpp Constants/constants.h Painter/painter.cpp Painter/painter.h Geometry/Line/line.h Geometry/Line/line.cpp Geometry/Point/point.cpp Geometry/Point/point.h Math/math.cpp Math/math.h assert.h Geometry/Segment/segment.cpp Geometry/Segment/segment.h)
+#        PhysicsObject/physics_object.cpp
+#        PhysicsObject/physics_object.h
+#        PhysicsObject/StaticObject/StaticObject.cpp
+#        PhysicsObject/StaticObject/StaticObject.h
+#        PhysicsObject/RectangleObject/rectangle_object.cpp
+#        PhysicsObject/RectangleObject/rectangle_object.h
+#        GUI/MainWindow/main_window.cpp GUI/MainWindow/main_window.h
+        Constants/constants.cpp Constants/constants.h
+        Painter/painter.cpp Painter/painter.h
+        Geometry/Line/line.h Geometry/Line/line.cpp
+        Geometry/Point/point.cpp Geometry/Point/point.h
+        Math/math.cpp Math/math.h
+        Geometry/Segment/segment.cpp
+        Geometry/Segment/segment.h
+        Geometry/Polygon/polygon.cpp
+        Geometry/Polygon/polygon.h
+        )
 
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)
 
-add_executable(Physics ${SOURCES} ${RESOURCES_COMMON}
-        ${SYSTEM_DEPENDENT_SOURCES})
+add_executable(Physics ${SOURCES} ${RESOURCES_COMMON})
 
 target_link_libraries(Physics ${REQUIRED_LIBS_QUALIFIED})
 

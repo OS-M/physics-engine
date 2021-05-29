@@ -30,6 +30,15 @@ bool IsMoreOrEqual(double lhs, double rhs, double epsilon) {
   return IsMore(lhs, rhs, epsilon) || IsEqual(lhs, rhs, epsilon);
 }
 
+bool IsInBounds(double number, double bound1, double bound2, double epsilon) {
+  return IsLessOrEqual(bound1, number, epsilon) &&
+      IsLessOrEqual(number, bound2, epsilon);
+}
+
+bool IsInBounds(int number, int bound1, int bound2) {
+  return (bound1 <= number) && (number <= bound2);
+}
+
 double Min(double lhs, double rhs, double epsilon) {
   if (IsLess(lhs, rhs, epsilon)) {
     return lhs;
@@ -37,9 +46,11 @@ double Min(double lhs, double rhs, double epsilon) {
   return rhs;
 }
 
-bool IsInBounds(double number, double bound1, double bound2, double epsilon) {
-  return IsLessOrEqual(bound1, number, epsilon) &&
-      IsLessOrEqual(number, bound2, epsilon);
+double Max(double lhs, double rhs, double epsilon) {
+  if (IsMore(lhs, rhs, epsilon)) {
+    return lhs;
+  }
+  return rhs;
 }
 
 bool IsNegative(double number, double epsilon) {

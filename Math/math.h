@@ -19,6 +19,7 @@ double Min(double lhs, double rhs, double epsilon = kEps);
 double Max(double lhs, double rhs, double epsilon = kEps);
 bool IsInBounds(double number, double bound1, double bound2,
                 double epsilon = kEps);
+bool IsInBounds(int number, int bound1, int bound2);
 bool IsNegative(double number, double epsilon = kEps);
 bool IsPositive(double number, double epsilon = kEps);
 

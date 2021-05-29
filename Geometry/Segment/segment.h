@@ -3,6 +3,7 @@
 
 #include "Geometry/Point/point.h"
 #include "Geometry/Line/line.h"
+#include <QLineF>
 
 class Segment {
  public:
@@ -15,6 +16,7 @@ class Segment {
   Point Middle() const;
   Line GetLine() const;
   Point Vector() const;
+  QLineF ToQLineF() const;
 
  private:
   Point point1_;

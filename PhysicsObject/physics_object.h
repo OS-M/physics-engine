@@ -2,7 +2,6 @@
 #define PHYSICS_OBJECT_H_
 
 #include <QPainter>
-#include "types.h"
 
 namespace PhysicsObjectTypeWrapper {
 

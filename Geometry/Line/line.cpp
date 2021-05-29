@@ -54,3 +54,7 @@ double Line::DistanceTo(const Point& point) const {
 bool Line::IsOnRightSize(const Point& point) const {
   return (point2_ - point1_).IsRightTurn(point - point2_);
 }
+
+QLineF Line::ToQLineF() const {
+  return QLineF(point1_.ToQPointF(), point2_.ToQPointF());
+}

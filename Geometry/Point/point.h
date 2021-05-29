@@ -1,12 +1,14 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <QPointF>
 #include "Math/math.h"
 
 class Point {
  public:
   Point() = default;
   Point(double x, double y);
+  Point(const Point& point1, const Point& point2);
 
   Point operator+(const Point& other) const;
   Point operator-(const Point& other) const;
@@ -28,6 +30,8 @@ class Point {
   void SetX(double x);
   double Y() const;
   void SetY(double y);
+
+  QPointF ToQPointF() const;
 
   Point Rotated(const Point& center, double angle) const;
 
