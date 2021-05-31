@@ -7,7 +7,7 @@ Engine::Engine(int tickrate, const QSizeF& world_size) :
     world_size_(world_size) {
   ticker_.start(1000 / tickrate);
   delta_time_measurer_.start();
-  objects_ = std::make_shared<std::vector<std::shared_ptr<PhysicsObject>>>();
+  objects_ = std::make_shared<std::vector<SharedObject>>();
   QObject::connect(&ticker_, &QTimer::timeout,
                    [this]() {
                      this->OnTick();
@@ -59,7 +59,6 @@ void Engine::ProcessCollisions(double delta_time) {
       if (object1->IsStatic() && object2->IsStatic()) {
         continue;
       }
-      double max_depth = -1;
       for (auto point : object1->Points()) {
         if (object2->Contains(point)) {
           double depth;
@@ -69,7 +68,6 @@ void Engine::ProcessCollisions(double delta_time) {
                                         depth,
                                         object1,
                                         object2);
-          max_depth = std::max(max_depth, depth);
         }
       }
       for (auto point : object2->Points()) {
@@ -81,7 +79,6 @@ void Engine::ProcessCollisions(double delta_time) {
                                         depth,
                                         object1,
                                         object2);
-          max_depth = std::max(max_depth, depth);
         }
       }
     }
@@ -90,10 +87,9 @@ void Engine::ProcessCollisions(double delta_time) {
       const CollidingPoint& point1, const CollidingPoint& point2) {
     return point1.depth > point2.depth;
   });
-  std::map<std::pair<std::shared_ptr<PhysicsObject>,
-                     std::shared_ptr<PhysicsObject>>, double> depths;
-  std::set<std::pair<std::shared_ptr<PhysicsObject>,
-                     std::shared_ptr<PhysicsObject>>> processed;
+  std::map<std::pair<SharedObject, SharedObject>, double> depths;
+  std::set<std::pair<SharedObject, SharedObject>> processed;
+  std::set<SharedObject> was_collided;
   for (const auto& colliding_point : colliding_points) {
     auto object1 = colliding_point.object1;
     auto object2 = colliding_point.object2;
@@ -118,27 +114,39 @@ void Engine::ProcessCollisions(double delta_time) {
     auto k = (object1->GetRecoveryFactor() + object2->GetRecoveryFactor()) / 2.;
 
     auto velocity_to_set1 = velocity1 - normal * v_projection1;
-    auto scalar_v1 = velocity1.Length()
-        - (1 + k) * mass2 * (velocity1.Length() - velocity2.Length())
+    auto scalar_v1 = v_projection1
+        - (1 + k) * mass2 * (v_projection1 - v_projection2)
             / (mass1 + mass2);
-    velocity_to_set1 -= normal * scalar_v1;
+    velocity_to_set1 += normal * scalar_v1;
 
     auto velocity_to_set2 = velocity2 - normal * v_projection2;
-    auto scalar_v2 = velocity2.Length()
-        + (1 + k) * mass1 * (velocity1.Length() - velocity2.Length())
+    auto scalar_v2 = v_projection2
+        + (1 + k) * mass1 * (v_projection1 - v_projection2)
             / (mass1 + mass2);
-    velocity_to_set2 -= normal * scalar_v2;
+    velocity_to_set2 += normal * scalar_v2;
+
+    // if (was_collided.find(object1) != was_collided.end()) {
+    //   auto sum = velocity1 + velocity_to_set1;
+    //   velocity_to_set1 = sum;
+    // }
+    // if (was_collided.find(object2) != was_collided.end()) {
+    //   auto sum = velocity2 + velocity_to_set2;
+    //   velocity_to_set2 = sum;
+    // }
 
     object1->SetVelocity(velocity_to_set1);
     object2->SetVelocity(velocity_to_set2);
 
     processed.emplace(object1, object2);
     processed.emplace(object2, object1);
+
+    was_collided.insert(object1);
+    was_collided.insert(object2);
   }
   collide_depth_ = depths;
 }
 
-void Engine::AddObject(const std::shared_ptr<PhysicsObject>& physics_object) {
+void Engine::AddObject(const SharedObject& physics_object) {
   objects_->push_back(physics_object);
 }
 
@@ -146,14 +154,14 @@ QSizeF Engine::GetWorldSize() const {
   return world_size_;
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<PhysicsObject>>> Engine::GetObjects() {
+std::shared_ptr<std::vector<SharedObject>> Engine::GetObjects() {
   return objects_;
 }
 
 Engine::CollidingPoint::CollidingPoint(Point point_, Point normal_,
                                        double depth_,
-                                       std::shared_ptr<PhysicsObject> object1_,
-                                       std::shared_ptr<PhysicsObject> object2_)
+                                       SharedObject object1_,
+                                       SharedObject object2_)
     : point(point_),
       normal(normal_),
       depth(depth_),

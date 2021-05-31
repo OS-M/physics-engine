@@ -60,7 +60,7 @@ class PhysicsObject {
 
  private:
   bool static_{false};
-  double recovery_factor_{0.6};
+  double recovery_factor_{0.9};
   Point force_;
   Point velocity_;
   double mass_{1.};

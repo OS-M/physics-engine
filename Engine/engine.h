@@ -8,13 +8,15 @@
 
 #include "PhysicsObject/PolygonObject/polygon_object.h"
 
+typedef std::shared_ptr<PhysicsObject> SharedObject;
+
 class Engine {
  public:
   Engine(int tickrate, const QSizeF& world_size);
 
-  void AddObject(const std::shared_ptr<PhysicsObject>& physics_object);
+  void AddObject(const SharedObject& physics_object);
   QSizeF GetWorldSize() const;
-  std::shared_ptr<std::vector<std::shared_ptr<PhysicsObject>>> GetObjects();
+  std::shared_ptr<std::vector<SharedObject>> GetObjects();
 
   void OnTick();
 
@@ -23,13 +25,13 @@ class Engine {
     CollidingPoint(Point point,
                    Point normal,
                    double depth,
-                   std::shared_ptr<PhysicsObject> object1,
-                   std::shared_ptr<PhysicsObject> object2);
+                   SharedObject object1,
+                   SharedObject object2);
     Point point;
     Point normal;
     double depth;
-    std::shared_ptr<PhysicsObject> object1;
-    std::shared_ptr<PhysicsObject> object2;
+    SharedObject object1;
+    SharedObject object2;
   };
 
   void PrepareTick(double delta_time);
@@ -41,10 +43,9 @@ class Engine {
   QSizeF world_size_;
   QTimer ticker_;
   QElapsedTimer delta_time_measurer_;
-  std::shared_ptr<std::vector<std::shared_ptr<PhysicsObject>>> objects_;
+  std::shared_ptr<std::vector<SharedObject>> objects_;
   Point gravity_force_{0, 9.8};
-  std::map<std::pair<std::shared_ptr<PhysicsObject>,
-                     std::shared_ptr<PhysicsObject>>, double> collide_depth_;
+  std::map<std::pair<SharedObject, SharedObject>, double> collide_depth_;
 };
 
 #endif //ENGINE_H

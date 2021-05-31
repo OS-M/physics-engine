@@ -115,3 +115,9 @@ void Point::operator-=(const Point& other) {
 double Point::ProjectionOn(const Point& vector) const {
   return this->DotProduct(vector) / vector.Length();
 }
+
+bool Point::IsSimilarAngle(const Point& other) const {
+  return Math::IsInBounds(this->AngleTo(other),
+                          -Math::kPi / 2.,
+                          Math::kPi / 2.);
+}

@@ -39,6 +39,8 @@ class Point {
 
   QPointF ToQPointF() const;
 
+  bool IsSimilarAngle(const Point& other) const;
+
   Point Rotated(const Point& center, double angle) const;
   double ProjectionOn(const Point& vector) const;
 
