@@ -20,6 +20,7 @@ class Line {
   double DistanceTo(const Point& point) const;
   bool IsOnRightSide(const Point& point) const;
   QLineF ToQLineF() const;
+  Point Vector() const;
 
   void Shift(const Point& shift);
 

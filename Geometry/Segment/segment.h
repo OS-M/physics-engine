@@ -19,6 +19,8 @@ class Segment {
   Point Vector() const;
   QLineF ToQLineF() const;
 
+  double DistanceTo(const Point& point) const;
+
   void Shift(const Point& shift);
 
  private:

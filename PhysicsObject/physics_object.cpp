@@ -60,3 +60,7 @@ bool PhysicsObject::IsStatic() const {
 void PhysicsObject::SetStatic(bool is_static) {
   static_ = is_static;
 }
+
+std::vector<Point> PhysicsObject::Points() const {
+  return std::vector<Point>();
+}

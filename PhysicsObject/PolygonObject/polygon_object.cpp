@@ -23,3 +23,29 @@ void PolygonObject::Shift(const Point& shift) {
   polygon_.Shift(shift);
 }
 
+PhysicsObjectType PolygonObject::GetType() const {
+  return PhysicsObjectType::kPolygonObject;
+}
+
+std::vector<Point> PolygonObject::Points() const {
+  return polygon_.Points();
+}
+
+bool PolygonObject::Contains(const Point& point) const {
+  return polygon_.Contains(point);
+}
+
+Point PolygonObject::GetDistanceToClosestSide(const Point& point,
+                                              double* const distance) const {
+  *distance = 1e9;
+  Point normal;
+  for (int i = 0; i < polygon_.Size(); i++) {
+    auto curr_distance = polygon_.GetSide(i).DistanceTo(point);
+    if (curr_distance < *distance) {
+      *distance = curr_distance;
+      normal = polygon_.GetSide(i).Vector().Normal();
+    }
+  }
+  return normal;
+}
+

@@ -23,6 +23,7 @@ class Engine {
   void ProcessGravity(double delta_time);
   void SetVelocities(double delta_time);
   void SetPositions(double delta_time);
+  void ProcessCollisions(double delta_time);
 
   QSizeF world_size_;
   QTimer ticker_;

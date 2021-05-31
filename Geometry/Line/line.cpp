@@ -40,16 +40,15 @@ std::vector<Point> Line::Intersected(const Line& other) const {
 }
 
 Line Line::Rotated(const Point& point, double angle) const {
+  if (Math::IsZero(point1_.DistanceTo(point2_)) {
+    qWarning() << "Points are equal";
+  }
   return Line(point1_.Rotated(point, angle),
               point2_.Rotated(point, angle));
 }
 
 Line Line::Normal() const {
-  Line line(point1_, point2_);
-  line.a_ = b_;
-  line.b_ = -a_;
-  line.c_ = c_;
-  return line;
+  return Line(b_, -a_, c_);
 }
 
 double Line::DistanceTo(const Point& point) const {
@@ -58,10 +57,16 @@ double Line::DistanceTo(const Point& point) const {
 }
 
 bool Line::IsOnRightSide(const Point& point) const {
+  if (Math::IsZero(point1_.DistanceTo(point2_)) {
+    qWarning() << "Points are equal";
+  }
   return (point2_ - point1_).IsRightTurn(point - point2_);
 }
 
 QLineF Line::ToQLineF() const {
+  if (Math::IsZero(point1_.DistanceTo(point2_)) {
+    qWarning() << "Points are equal";
+  }
   return QLineF(point1_.ToQPointF(), point2_.ToQPointF());
 }
 
@@ -78,5 +83,12 @@ double Line::C() const {
 }
 
 void Line::Shift(const Point& shift) {
+  if (Math::IsZero(point1_.DistanceTo(point2_)) {
+    qWarning() << "Points are equal";
+  }
   *this = Line(point1_ + shift, point2_ + shift);
+}
+
+Point Line::Vector() const {
+  return Point(point1_, point2_);
 }

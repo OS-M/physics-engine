@@ -111,3 +111,7 @@ void Point::operator+=(const Point& other) {
 void Point::operator-=(const Point& other) {
   *this = *this - other;
 }
+
+double Point::ProjectionOn(const Point& vector) const {
+  return this->DotProduct(vector) / vector.Length();
+}

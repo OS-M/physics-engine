@@ -58,3 +58,13 @@ QLineF Segment::ToQLineF() const {
 void Segment::Shift(const Point& shift) {
   *this = Segment(point1_ + shift, point2_ + shift);
 }
+
+double Segment::DistanceTo(const Point& point) const {
+  double scalar1 = (point - point1_).DotProduct(point2_ - point1_);
+  double scalar2 = (point - point2_).DotProduct(point1_ - point2_);
+  if (Math::IsMoreOrEqual(scalar1 * scalar2, 0)) {
+    return this->GetLine().DistanceTo(point);
+  } else {
+    return Math::Min(point.DistanceTo(point1_), point.DistanceTo(point2_));
+  }
+}

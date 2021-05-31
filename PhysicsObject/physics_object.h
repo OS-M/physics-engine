@@ -11,7 +11,7 @@ Q_NAMESPACE
 
 enum class PhysicsObjectType {
   kPhysicsObject,
-  kStaticObject,
+  kPolygonObject,
 
   SIZE
 };
@@ -51,6 +51,12 @@ class PhysicsObject {
 
   void SetStatic(bool is_static);
   bool IsStatic() const;
+
+  virtual std::vector<Point> Points() const;
+  virtual bool Contains(const Point& point) const = 0;
+  // Returns normal to closest side
+  virtual Point GetDistanceToClosestSide(const Point& point,
+                                         double* distance) const = 0;
 
  private:
   bool static_{false};

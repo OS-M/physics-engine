@@ -40,6 +40,7 @@ class Point {
   QPointF ToQPointF() const;
 
   Point Rotated(const Point& center, double angle) const;
+  double ProjectionOn(const Point& vector) const;
 
  private:
   double x_{0.};
