@@ -12,14 +12,14 @@ class PolygonObject : public PhysicsObject {
   explicit PolygonObject(std::vector<Point> points);
   virtual ~PolygonObject() = default;
 
-  virtual PhysicsObjectType GetType() const;
+  PhysicsObjectType GetType() const override;
 
   void Shift(const Point& shift) override;
   void Draw(QPainter* painter) const override;
   void Rotate(const Point& center, double angle);
   QPolygonF ToQPolygonF() const;
   std::vector<Point> Points() const override;
-  bool Contains(const Point& point) const;
+  bool Contains(const Point& point) const override;
 
   Point GetDistanceToClosestSide(const Point& point,
                                  double* distance) const override;

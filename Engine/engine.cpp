@@ -1,5 +1,8 @@
 #include "engine.h"
 
+#include <utility>
+#include <set>
+
 Engine::Engine(int tickrate, const QSizeF& world_size) :
     world_size_(world_size) {
   ticker_.start(1000 / tickrate);
@@ -13,12 +16,12 @@ Engine::Engine(int tickrate, const QSizeF& world_size) :
 
 void Engine::OnTick() {
   double delta_time = delta_time_measurer_.restart();
-  delta_time /= 1000.;
+  delta_time /= 300.;
 
   this->PrepareTick(delta_time);
   this->ProcessGravity(delta_time);
   this->SetVelocities(delta_time);
-
+  this->ProcessCollisions(delta_time);
   this->SetPositions(delta_time);
 }
 
@@ -48,50 +51,87 @@ void Engine::SetPositions(double delta_time) {
 }
 
 void Engine::ProcessCollisions(double delta_time) {
-  std::unordered_map<std::shared_ptr<PhysicsObject>, Point> velocities_to_set;
-  for (const auto& current_object : *objects_) {
-    for (const auto& colliding_object : *objects_) {
-      if (current_object == colliding_object) {
+  std::vector<CollidingPoint> colliding_points;
+  std::map<std::shared_ptr<PhysicsObject>, int> count_of_collisions;
+  for (int i = 0; i < objects_->size(); i++) {
+    for (int j = i + 1; j < objects_->size(); j++) {
+      auto object1 = objects_->at(i);
+      auto object2 = objects_->at(j);
+      if (object1->IsStatic() && object2->IsStatic()) {
         continue;
       }
-      std::vector<Point> colliding_points;
-      for (auto point : current_object->Points()) {
-        if (colliding_object->Contains(point)) {
-          colliding_points.push_back(point);
+      bool collided = false;
+      for (auto point : object1->Points()) {
+        if (object2->Contains(point)) {
+          collided = true;
+          double depth;
+          auto normal = object2->GetDistanceToClosestSide(point, &depth);
+          colliding_points.emplace_back(point,
+                                        normal,
+                                        depth,
+                                        object1,
+                                        object2);
         }
       }
-      for (auto point : colliding_object->Points()) {
-        if (current_object->Contains(point)) {
-          colliding_points.push_back(point);
+      for (auto point : object2->Points()) {
+        if (object1->Contains(point)) {
+          collided = true;
+          double depth;
+          auto normal = object1->GetDistanceToClosestSide(point, &depth);
+          colliding_points.emplace_back(point,
+                                        normal,
+                                        depth,
+                                        object1,
+                                        object2);
         }
       }
-
-      Point colliding_point;
-      Point normal;
-      double max_distance = -1e9;
-      for (auto point : colliding_points) {
-        double distance;
-        auto curr_normal =
-            colliding_object->GetDistanceToClosestSide(point, &distance);
-        if (distance > max_distance) {
-          max_distance = distance;
-          normal = curr_normal;
-          colliding_point = point;
-        }
+      if (collided) {
+        count_of_collisions[object1]++;
+        count_of_collisions[object2]++;
       }
-      normal = normal.Normalized();
-
-      auto curr_velocity = current_object->GetVelocity();
-      auto colliding_velocity = colliding_object->GetVelocity();
-      auto curr_v_projection = curr_velocity.ProjectionOn(normal);
-      auto colliding_v_projection = colliding_velocity.ProjectionOn(normal);
-
-      auto velocity_to_set = curr_velocity - normal * curr_v_projection;
-      double system_pulse = curr_velocity.Length() * current_object->GetMass() +
-          colliding_velocity.Length() * colliding_object->GetMass();
-      velocity_to_set +=
-          normal * (system_pulse / (2. * current_object->GetMass());
     }
+  }
+  std::sort(colliding_points.begin(), colliding_points.end(), [](
+      const CollidingPoint& point1, const CollidingPoint& point2) {
+    return point1.depth > point2.depth;
+  });
+  std::set<std::pair<std::shared_ptr<PhysicsObject>,
+                     std::shared_ptr<PhysicsObject>>> processed;
+  for (const auto& colliding_point : colliding_points) {
+    auto object1 = colliding_point.object1;
+    auto object2 = colliding_point.object2;
+    if (processed.contains(std::make_pair(object1, object2))) {
+      continue;
+    }
+
+    auto normal = colliding_point.normal.Normalized();
+
+    auto velocity1 = object1->GetVelocity();
+    auto velocity2 = object2->GetVelocity();
+    auto v_projection1 = velocity1.ProjectionOn(normal);
+    auto v_projection2 = velocity2.ProjectionOn(normal);
+    auto mass1 = object1->GetMass();
+    auto mass2 = object2->GetMass();
+
+    auto k = (object1->GetRecoveryFactor() + object2->GetRecoveryFactor()) / 2.;
+
+    auto velocity_to_set1 = velocity1 - normal * v_projection1;
+    auto scalar_v1 = velocity1.Length()
+        - (1 + k) * mass2 * (velocity1.Length() - velocity2.Length())
+            / (mass1 + mass2);
+    velocity_to_set1 -= normal * scalar_v1;
+
+    auto velocity_to_set2 = velocity2 - normal * v_projection2;
+    auto scalar_v2 = velocity2.Length()
+        + (1 + k) * mass1 * (velocity1.Length() - velocity2.Length())
+            / (mass1 + mass2);
+    velocity_to_set2 -= normal * scalar_v2;
+
+    object1->SetVelocity(velocity_to_set1);
+    object2->SetVelocity(velocity_to_set2);
+
+    processed.emplace(object1, object2);
+    processed.emplace(object2, object1);
   }
 }
 
@@ -106,3 +146,13 @@ QSizeF Engine::GetWorldSize() const {
 std::shared_ptr<std::vector<std::shared_ptr<PhysicsObject>>> Engine::GetObjects() {
   return objects_;
 }
+
+Engine::CollidingPoint::CollidingPoint(Point point_, Point normal_,
+                                       double depth_,
+                                       std::shared_ptr<PhysicsObject> object1_,
+                                       std::shared_ptr<PhysicsObject> object2_)
+    : point(point_),
+      normal(normal_),
+      depth(depth_),
+      object1(std::move(object1_)),
+      object2(std::move(object2_)) {}

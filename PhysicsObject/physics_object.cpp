@@ -7,12 +7,12 @@ PhysicsObjectType PhysicsObject::GetType() const {
   return PhysicsObjectType::kPhysicsObject;
 }
 
-double PhysicsObject::GetResiliency() const {
-  return resiliency_;
+double PhysicsObject::GetRecoveryFactor() const {
+  return recovery_factor_;
 }
 
-void PhysicsObject::SetResiliency(double resiliency) {
-  resiliency_ = resiliency;
+void PhysicsObject::SetRecoveryFactor(double resiliency) {
+  recovery_factor_ = resiliency;
 }
 
 Point PhysicsObject::GetForce() const {
@@ -50,6 +50,9 @@ void PhysicsObject::SetMass(double mass) {
 }
 
 double PhysicsObject::GetMass() const {
+  if (static_) {
+    return 1e9;
+  }
   return mass_;
 }
 

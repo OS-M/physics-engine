@@ -44,7 +44,7 @@ bool Polygon::Contains(const Point& point) const {
 }
 
 Segment Polygon::GetSide(int index) const {
-  if (!Math::IsInBounds(0, this->Size() - 1, index)) {
+  if (!Math::IsInBounds(index, 0, this->Size() - 1)) {
     qWarning() << "Index out of bounds";
     return Segment(Point(), Point());
   }

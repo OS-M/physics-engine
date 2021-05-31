@@ -19,6 +19,19 @@ class Engine {
   void OnTick();
 
  private:
+  struct CollidingPoint {
+    CollidingPoint(Point point,
+                   Point normal,
+                   double depth,
+                   std::shared_ptr<PhysicsObject> object1,
+                   std::shared_ptr<PhysicsObject> object2);
+    Point point;
+    Point normal;
+    double depth;
+    std::shared_ptr<PhysicsObject> object1;
+    std::shared_ptr<PhysicsObject> object2;
+  };
+
   void PrepareTick(double delta_time);
   void ProcessGravity(double delta_time);
   void SetVelocities(double delta_time);

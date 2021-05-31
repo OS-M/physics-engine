@@ -10,7 +10,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  MainWindow(int64_t tickrate, std::shared_ptr<Engine> engine);
+  MainWindow(int64_t tickrate, const std::shared_ptr<Engine>& engine);
 
   void paintEvent(QPaintEvent* event) override;
   void mousePressEvent(QMouseEvent* event) override;
@@ -20,6 +20,8 @@ class MainWindow : public QMainWindow {
   View view_;
   QTimer ticker_;
   QElapsedTimer delta_time_measurer_;
+  QTransform world_transform_;
+  std::shared_ptr<Engine> engine_;
 };
 
 #endif  // MAIN_WINDOW_H_

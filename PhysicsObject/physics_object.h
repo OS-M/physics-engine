@@ -35,8 +35,8 @@ class PhysicsObject {
 
   virtual void Shift(const Point& shift) = 0;
 
-  void SetResiliency(double resiliency);
-  double GetResiliency() const;
+  void SetRecoveryFactor(double resiliency);
+  double GetRecoveryFactor() const;
 
   void SetForce(const Point& force);
   Point& GetMutableForce();
@@ -60,7 +60,7 @@ class PhysicsObject {
 
  private:
   bool static_{false};
-  double resiliency_{0.};
+  double recovery_factor_{0.6};
   Point force_;
   Point velocity_;
   double mass_{1.};
