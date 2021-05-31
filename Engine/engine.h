@@ -43,6 +43,8 @@ class Engine {
   QElapsedTimer delta_time_measurer_;
   std::shared_ptr<std::vector<std::shared_ptr<PhysicsObject>>> objects_;
   Point gravity_force_{0, 9.8};
+  std::map<std::pair<std::shared_ptr<PhysicsObject>,
+                     std::shared_ptr<PhysicsObject>>, double> collide_depth_;
 };
 
 #endif //ENGINE_H

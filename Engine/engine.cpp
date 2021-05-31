@@ -52,7 +52,6 @@ void Engine::SetPositions(double delta_time) {
 
 void Engine::ProcessCollisions(double delta_time) {
   std::vector<CollidingPoint> colliding_points;
-  std::map<std::shared_ptr<PhysicsObject>, int> count_of_collisions;
   for (int i = 0; i < objects_->size(); i++) {
     for (int j = i + 1; j < objects_->size(); j++) {
       auto object1 = objects_->at(i);
@@ -60,10 +59,9 @@ void Engine::ProcessCollisions(double delta_time) {
       if (object1->IsStatic() && object2->IsStatic()) {
         continue;
       }
-      bool collided = false;
+      double max_depth = -1;
       for (auto point : object1->Points()) {
         if (object2->Contains(point)) {
-          collided = true;
           double depth;
           auto normal = object2->GetDistanceToClosestSide(point, &depth);
           colliding_points.emplace_back(point,
@@ -71,11 +69,11 @@ void Engine::ProcessCollisions(double delta_time) {
                                         depth,
                                         object1,
                                         object2);
+          max_depth = std::max(max_depth, depth);
         }
       }
       for (auto point : object2->Points()) {
         if (object1->Contains(point)) {
-          collided = true;
           double depth;
           auto normal = object1->GetDistanceToClosestSide(point, &depth);
           colliding_points.emplace_back(point,
@@ -83,11 +81,8 @@ void Engine::ProcessCollisions(double delta_time) {
                                         depth,
                                         object1,
                                         object2);
+          max_depth = std::max(max_depth, depth);
         }
-      }
-      if (collided) {
-        count_of_collisions[object1]++;
-        count_of_collisions[object2]++;
       }
     }
   }
@@ -95,6 +90,8 @@ void Engine::ProcessCollisions(double delta_time) {
       const CollidingPoint& point1, const CollidingPoint& point2) {
     return point1.depth > point2.depth;
   });
+  std::map<std::pair<std::shared_ptr<PhysicsObject>,
+                     std::shared_ptr<PhysicsObject>>, double> depths;
   std::set<std::pair<std::shared_ptr<PhysicsObject>,
                      std::shared_ptr<PhysicsObject>>> processed;
   for (const auto& colliding_point : colliding_points) {
@@ -103,7 +100,12 @@ void Engine::ProcessCollisions(double delta_time) {
     if (processed.find(std::make_pair(object1, object2)) != processed.end()) {
       continue;
     }
-
+    if (Math::IsLess(colliding_point.depth,
+                     collide_depth_[std::make_pair(object1, object2)])) {
+      continue;
+    }
+    depths[std::make_pair(object1, object2)] = colliding_point.depth;
+    depths[std::make_pair(object2, object1)] = colliding_point.depth;
     auto normal = colliding_point.normal.Normalized();
 
     auto velocity1 = object1->GetVelocity();
@@ -133,6 +135,7 @@ void Engine::ProcessCollisions(double delta_time) {
     processed.emplace(object1, object2);
     processed.emplace(object2, object1);
   }
+  collide_depth_ = depths;
 }
 
 void Engine::AddObject(const std::shared_ptr<PhysicsObject>& physics_object) {

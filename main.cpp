@@ -41,6 +41,10 @@ int main(int argc, char* argv[]) {
       Point(0, 150), world_width, 10);
   obj->Rotate(Point(0, 150), -M_PI / 20.);
   engine->AddObject(obj);
+  auto obj1 = GetStaticObject<PolygonObject>(
+      Point(120, 80), world_width, 10);
+  obj1->Rotate(Point(120, 80), -M_PI / 3.);
+  engine->AddObject(obj1);
 
   MainWindow main_window(64, engine);
   main_window.show();
