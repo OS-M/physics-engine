@@ -100,7 +100,7 @@ void Engine::ProcessCollisions(double delta_time) {
   for (const auto& colliding_point : colliding_points) {
     auto object1 = colliding_point.object1;
     auto object2 = colliding_point.object2;
-    if (processed.contains(std::make_pair(object1, object2))) {
+    if (processed.find(std::make_pair(object1, object2)) != processed.end()) {
       continue;
     }
 
