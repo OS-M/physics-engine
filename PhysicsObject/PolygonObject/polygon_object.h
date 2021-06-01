@@ -16,10 +16,12 @@ class PolygonObject : public PhysicsObject {
 
   void Shift(const Point& shift) override;
   void Draw(QPainter* painter) const override;
-  void Rotate(const Point& center, double angle);
+  void Rotate(const Point& center, double angle) override;
   QPolygonF ToQPolygonF() const;
   std::vector<Point> Points() const override;
   bool Contains(const Point& point) const override;
+
+  const Polygon& GetPolygon() const;
 
   Point GetDistanceToClosestSide(const Point& point,
                                  double* distance) const override;

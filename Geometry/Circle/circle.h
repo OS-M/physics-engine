@@ -16,6 +16,8 @@ class Circle {
 
   void Shift(const Point& shift);
 
+  bool Intersects(const Circle& other) const;
+
   Point Center() const;
   double Radius() const;
   double Diameter() const;

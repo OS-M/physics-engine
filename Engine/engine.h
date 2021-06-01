@@ -7,8 +7,7 @@
 #include <memory>
 
 #include "PhysicsObject/PolygonObject/polygon_object.h"
-
-typedef std::shared_ptr<PhysicsObject> SharedObject;
+#include "Collisions/collisions.h"
 
 class Engine {
  public:
@@ -17,23 +16,11 @@ class Engine {
   void AddObject(const SharedObject& physics_object);
   QSizeF GetWorldSize() const;
   std::shared_ptr<std::vector<SharedObject>> GetObjects();
+  const std::vector<CollidingPoint>& GetCollidingPoints() const;
 
   void OnTick();
 
  private:
-  struct CollidingPoint {
-    CollidingPoint(Point point,
-                   Point normal,
-                   double depth,
-                   SharedObject object1,
-                   SharedObject object2);
-    Point point;
-    Point normal;
-    double depth;
-    SharedObject object1;
-    SharedObject object2;
-  };
-
   void PrepareTick(double delta_time);
   void ProcessForces(double delta_time);
   void SetVelocities(double delta_time);

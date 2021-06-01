@@ -52,3 +52,7 @@ Point PolygonObject::GetDistanceToClosestSide(const Point& point,
   return normal.Normalized();
 }
 
+const Polygon& PolygonObject::GetPolygon() const {
+  return polygon_;
+}
+

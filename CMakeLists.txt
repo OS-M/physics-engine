@@ -92,7 +92,9 @@ set(SOURCES
         GUI/View/view.h
         MessageHandler/message_handler.h
         MessageHandler/message_handler.cpp
-        )
+        Collisions/collisions.cpp Collisions/collisions.h
+        PhysicsObject/CircleObject/circle_object.cpp
+        PhysicsObject/CircleObject/circle_object.h)
 
 # If necessary, add resources files
 qt5_add_big_resources(RESOURCES_COMMON)

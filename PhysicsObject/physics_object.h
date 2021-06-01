@@ -1,6 +1,7 @@
 #ifndef PHYSICS_OBJECT_H_
 #define PHYSICS_OBJECT_H_
 
+#include <memory>
 #include <QPainter>
 #include <QMetaEnum>
 #include "Geometry/Point/point.h"
@@ -12,6 +13,7 @@ Q_NAMESPACE
 enum class PhysicsObjectType {
   kPhysicsObject,
   kPolygonObject,
+  kCircleObject,
 
   SIZE
 };
@@ -61,6 +63,8 @@ class PhysicsObject {
   void SetAdditionalForce(const Point& additional_force);
   Point GetAdditionalForce() const;
 
+  virtual void Rotate(const Point& center, double angle) = 0;
+
  private:
   bool static_{false};
   double recovery_factor_{0.6};
@@ -69,5 +73,7 @@ class PhysicsObject {
   double mass_{1.};
   Point additional_force_;
 };
+
+typedef std::shared_ptr<PhysicsObject> SharedObject;
 
 #endif  // PHYSICS_OBJECT_H_

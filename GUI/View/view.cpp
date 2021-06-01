@@ -9,4 +9,9 @@ void View::paintEvent(QPaintEvent* event) {
   for (const auto& object : *engine_->GetObjects()) {
     object->Draw(&painter);
   }
+  painter.setBrush(Qt::red);
+  auto points = engine_->GetCollidingPoints();
+  for (const auto& point : points) {
+    painter.drawEllipse(point.point.ToQPointF(), 2, 2);
+  }
 }

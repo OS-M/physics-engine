@@ -38,28 +38,9 @@ void Engine::PrepareTick(double delta_time) {
       if (object1->IsStatic() && object2->IsStatic()) {
         continue;
       }
-      for (auto point : object1->Points()) {
-        if (object2->Contains(point)) {
-          double depth;
-          auto normal = object2->GetDistanceToClosestSide(point, &depth);
-          colliding_points_.emplace_back(point,
-                                         normal,
-                                         depth,
-                                         object1,
-                                         object2);
-        }
-      }
-      for (auto point : object2->Points()) {
-        if (object1->Contains(point)) {
-          double depth;
-          auto normal = object1->GetDistanceToClosestSide(point, &depth);
-          colliding_points_.emplace_back(point,
-                                         normal,
-                                         depth,
-                                         object1,
-                                         object2);
-        }
-      }
+      auto points = Collisions::GetCollisionPoints(object1, object2);
+      colliding_points_.insert(colliding_points_.end(),
+                               points.begin(), points.end());
     }
   }
   std::sort(colliding_points_.begin(), colliding_points_.end(), [](
@@ -91,7 +72,6 @@ void Engine::SetPositions(double delta_time) {
 void Engine::ProcessCollisions(double delta_time) {
   std::map<std::pair<SharedObject, SharedObject>, double> depths;
   std::set<std::pair<SharedObject, SharedObject>> processed;
-  std::set<SharedObject> was_collided;
   for (const auto& colliding_point : colliding_points_) {
     auto object1 = colliding_point.object1;
     auto object2 = colliding_point.object2;
@@ -132,9 +112,6 @@ void Engine::ProcessCollisions(double delta_time) {
 
     processed.emplace(object1, object2);
     processed.emplace(object2, object1);
-
-    was_collided.insert(object1);
-    was_collided.insert(object2);
   }
   collide_depth_ = depths;
 }
@@ -154,7 +131,7 @@ std::shared_ptr<std::vector<SharedObject>> Engine::GetObjects() {
 void Engine::ProcessPressureForces(double delta_time) {
   for (int iter = 0; iter < objects_->size(); iter++) {
     std::set<std::pair<SharedObject, SharedObject>> processed;
-    for (auto colliding_point : colliding_points_) {
+    for (const auto& colliding_point : colliding_points_) {
       auto object1 = colliding_point.object1;
       auto object2 = colliding_point.object2;
       if (processed.contains(std::make_pair(object1, object2))) {
@@ -177,12 +154,6 @@ void Engine::ProcessPressureForces(double delta_time) {
   }
 }
 
-Engine::CollidingPoint::CollidingPoint(Point point_, Point normal_,
-                                       double depth_,
-                                       SharedObject object1_,
-                                       SharedObject object2_)
-    : point(point_),
-      normal(normal_),
-      depth(depth_),
-      object1(std::move(object1_)),
-      object2(std::move(object2_)) {}
+const std::vector<CollidingPoint>& Engine::GetCollidingPoints() const {
+  return colliding_points_;
+}

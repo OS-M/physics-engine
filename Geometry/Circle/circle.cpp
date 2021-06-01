@@ -88,3 +88,8 @@ std::vector<Point> Circle::Intersected(const Segment& segment) const {
 void Circle::Shift(const Point& shift) {
   center_ += shift;
 }
+
+bool Circle::Intersects(const Circle& other) const {
+  return Math::IsLessOrEqual(center_.DistanceTo(other.center_),
+                             this->Radius() + other.Radius());
+}
