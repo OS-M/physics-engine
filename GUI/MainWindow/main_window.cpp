@@ -35,6 +35,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event) {
                            point + Point(20, 30),
                            point + Point(0, 30)});
   }
+  polygon_object->Rotate(point, counter);
   counter++;
   if (event->button() == Qt::MouseButton::RightButton) {
     polygon_object->SetAdditionalForce(Point(5, 0));
