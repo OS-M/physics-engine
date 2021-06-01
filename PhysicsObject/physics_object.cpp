@@ -67,3 +67,11 @@ void PhysicsObject::SetStatic(bool is_static) {
 std::vector<Point> PhysicsObject::Points() const {
   return std::vector<Point>();
 }
+
+Point PhysicsObject::GetAdditionalForce() const {
+  return additional_force_;
+}
+
+void PhysicsObject::SetAdditionalForce(const Point& additional_force) {
+  additional_force_ = additional_force;
+}

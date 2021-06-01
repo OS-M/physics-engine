@@ -33,6 +33,8 @@ class Point {
   double& MutableX();
   double X() const;
 
+  bool IsNull() const;
+
   void SetY(double y);
   double& MutableY();
   double Y() const;

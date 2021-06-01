@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <utility>
+#include <set>
 #include "Geometry/Point/point.h"
 #include "Geometry/Segment/segment.h"
 #include "Geometry/Circle/circle.h"
@@ -17,6 +18,8 @@ class Polygon {
   Polygon(const Point& point, double width, double height);
   Polygon(const Point& point1, const Point& point2);
   explicit Polygon(std::vector<Point> points);
+
+  static Polygon FromRawPoints(std::vector<Point> points);
 
   bool Contains(const Point& point) const;
   std::vector<Point> Intersected(const Line& line) const;
@@ -34,6 +37,7 @@ class Polygon {
   QPolygonF ToQPolygonF() const;
 
  private:
+  void AddScanPoints();
   std::vector<Point> points_;
 };
 

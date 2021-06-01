@@ -19,7 +19,8 @@ void Engine::OnTick() {
   delta_time /= 300.;
 
   this->PrepareTick(delta_time);
-  this->ProcessGravity(delta_time);
+  this->ProcessForces(delta_time);
+  this->ProcessPressureForces(delta_time);
   this->SetVelocities(delta_time);
   this->ProcessCollisions(delta_time);
   this->SetPositions(delta_time);
@@ -29,11 +30,48 @@ void Engine::PrepareTick(double delta_time) {
   for (const auto& object : *objects_) {
     object->SetForce(Point());
   }
+  colliding_points_.clear();
+  for (int i = 0; i < objects_->size(); i++) {
+    for (int j = i + 1; j < objects_->size(); j++) {
+      auto object1 = objects_->at(i);
+      auto object2 = objects_->at(j);
+      if (object1->IsStatic() && object2->IsStatic()) {
+        continue;
+      }
+      for (auto point : object1->Points()) {
+        if (object2->Contains(point)) {
+          double depth;
+          auto normal = object2->GetDistanceToClosestSide(point, &depth);
+          colliding_points_.emplace_back(point,
+                                         normal,
+                                         depth,
+                                         object1,
+                                         object2);
+        }
+      }
+      for (auto point : object2->Points()) {
+        if (object1->Contains(point)) {
+          double depth;
+          auto normal = object1->GetDistanceToClosestSide(point, &depth);
+          colliding_points_.emplace_back(point,
+                                         normal,
+                                         depth,
+                                         object1,
+                                         object2);
+        }
+      }
+    }
+  }
+  std::sort(colliding_points_.begin(), colliding_points_.end(), [](
+      const CollidingPoint& point1, const CollidingPoint& point2) {
+    return point1.depth > point2.depth;
+  });
 }
 
-void Engine::ProcessGravity(double delta_time) {
+void Engine::ProcessForces(double delta_time) {
   for (const auto& object : *objects_) {
-    object->GetMutableForce() += gravity_force_;
+    object->GetMutableForce() +=
+        (gravity_force_ + object->GetAdditionalForce()) * object->GetMass();
   }
 }
 
@@ -51,46 +89,10 @@ void Engine::SetPositions(double delta_time) {
 }
 
 void Engine::ProcessCollisions(double delta_time) {
-  std::vector<CollidingPoint> colliding_points;
-  for (int i = 0; i < objects_->size(); i++) {
-    for (int j = i + 1; j < objects_->size(); j++) {
-      auto object1 = objects_->at(i);
-      auto object2 = objects_->at(j);
-      if (object1->IsStatic() && object2->IsStatic()) {
-        continue;
-      }
-      for (auto point : object1->Points()) {
-        if (object2->Contains(point)) {
-          double depth;
-          auto normal = object2->GetDistanceToClosestSide(point, &depth);
-          colliding_points.emplace_back(point,
-                                        normal,
-                                        depth,
-                                        object1,
-                                        object2);
-        }
-      }
-      for (auto point : object2->Points()) {
-        if (object1->Contains(point)) {
-          double depth;
-          auto normal = object1->GetDistanceToClosestSide(point, &depth);
-          colliding_points.emplace_back(point,
-                                        normal,
-                                        depth,
-                                        object1,
-                                        object2);
-        }
-      }
-    }
-  }
-  std::sort(colliding_points.begin(), colliding_points.end(), [](
-      const CollidingPoint& point1, const CollidingPoint& point2) {
-    return point1.depth > point2.depth;
-  });
   std::map<std::pair<SharedObject, SharedObject>, double> depths;
   std::set<std::pair<SharedObject, SharedObject>> processed;
   std::set<SharedObject> was_collided;
-  for (const auto& colliding_point : colliding_points) {
+  for (const auto& colliding_point : colliding_points_) {
     auto object1 = colliding_point.object1;
     auto object2 = colliding_point.object2;
     if (processed.find(std::make_pair(object1, object2)) != processed.end()) {
@@ -125,15 +127,6 @@ void Engine::ProcessCollisions(double delta_time) {
             / (mass1 + mass2);
     velocity_to_set2 += normal * scalar_v2;
 
-    // if (was_collided.find(object1) != was_collided.end()) {
-    //   auto sum = velocity1 + velocity_to_set1;
-    //   velocity_to_set1 = sum;
-    // }
-    // if (was_collided.find(object2) != was_collided.end()) {
-    //   auto sum = velocity2 + velocity_to_set2;
-    //   velocity_to_set2 = sum;
-    // }
-
     object1->SetVelocity(velocity_to_set1);
     object2->SetVelocity(velocity_to_set2);
 
@@ -156,6 +149,35 @@ QSizeF Engine::GetWorldSize() const {
 
 std::shared_ptr<std::vector<SharedObject>> Engine::GetObjects() {
   return objects_;
+}
+
+void Engine::ProcessPressureForces(double delta_time) {
+  for (int iter = 0; iter < objects_->size(); iter++) {
+    std::set<std::pair<SharedObject, SharedObject>> processed;
+    for (auto colliding_point : colliding_points_) {
+      auto object1 = colliding_point.object1;
+      auto object2 = colliding_point.object2;
+      if (processed.contains(std::make_pair(object1, object2))) {
+        continue;
+      }
+      processed.emplace(object1, object2);
+      processed.emplace(object2, object1);
+      auto normal = colliding_point.normal;
+      auto f1 = object1->GetForce();
+      auto f2 = object2->GetForce();
+      auto f1_projection = f1.ProjectionOn(normal);
+      auto f2_projection = f2.ProjectionOn(normal);
+      if (colliding_point.depth > 1) {
+        // qWarning() << "GAY";
+      }
+      f2 += normal * f1_projection;
+      f1 += normal * f2_projection;
+      f1 -= normal * f1_projection;
+      f2 -= normal * f2_projection;
+      object1->SetForce(f1);
+      object2->SetForce(f2);
+    }
+  }
 }
 
 Engine::CollidingPoint::CollidingPoint(Point point_, Point normal_,

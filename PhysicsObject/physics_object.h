@@ -58,12 +58,16 @@ class PhysicsObject {
   virtual Point GetDistanceToClosestSide(const Point& point,
                                          double* distance) const = 0;
 
+  void SetAdditionalForce(const Point& additional_force);
+  Point GetAdditionalForce() const;
+
  private:
   bool static_{false};
-  double recovery_factor_{0.9};
+  double recovery_factor_{0.6};
   Point force_;
   Point velocity_;
   double mass_{1.};
+  Point additional_force_;
 };
 
 #endif  // PHYSICS_OBJECT_H_

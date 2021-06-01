@@ -9,6 +9,9 @@ PolygonObject::PolygonObject(std::vector<Point> points) :
 
 void PolygonObject::Draw(QPainter* painter) const {
   painter->drawPolygon(this->ToQPolygonF());
+  for (auto point : polygon_.Points()) {
+    painter->drawEllipse(point.ToQPointF(), 1, 1);
+  }
 }
 
 QPolygonF PolygonObject::ToQPolygonF() const {
@@ -46,6 +49,6 @@ Point PolygonObject::GetDistanceToClosestSide(const Point& point,
       normal = polygon_.GetSide(i).Vector().Normal();
     }
   }
-  return normal;
+  return normal.Normalized();
 }
 

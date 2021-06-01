@@ -35,10 +35,11 @@ class Engine {
   };
 
   void PrepareTick(double delta_time);
-  void ProcessGravity(double delta_time);
+  void ProcessForces(double delta_time);
   void SetVelocities(double delta_time);
   void SetPositions(double delta_time);
   void ProcessCollisions(double delta_time);
+  void ProcessPressureForces(double delta_time);
 
   QSizeF world_size_;
   QTimer ticker_;
@@ -46,6 +47,7 @@ class Engine {
   std::shared_ptr<std::vector<SharedObject>> objects_;
   Point gravity_force_{0, 9.8};
   std::map<std::pair<SharedObject, SharedObject>, double> collide_depth_;
+  std::vector<CollidingPoint> colliding_points_;
 };
 
 #endif //ENGINE_H

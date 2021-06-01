@@ -121,3 +121,7 @@ bool Point::IsSimilarAngle(const Point& other) const {
                           -Math::kPi / 2.,
                           Math::kPi / 2.);
 }
+
+bool Point::IsNull() const {
+  return Math::IsZero(this->Length());
+}
