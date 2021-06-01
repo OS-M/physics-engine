@@ -167,9 +167,6 @@ void Engine::ProcessPressureForces(double delta_time) {
       auto f2 = object2->GetForce();
       auto f1_projection = f1.ProjectionOn(normal);
       auto f2_projection = f2.ProjectionOn(normal);
-      if (colliding_point.depth > 1) {
-        // qWarning() << "GAY";
-      }
       f2 += normal * f1_projection;
       f1 += normal * f2_projection;
       f1 -= normal * f1_projection;
